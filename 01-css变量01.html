@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="./css/normalize.css">
+  <title>css变量01</title>
+  <style>
+    body {
+      --深蓝: #369;
+      background-color: var(--深蓝);
+    }
+
+    :root {
+      --color: purple;
+    }
+
+    div {
+      --color: green;
+    }
+
+    #alert {
+      --color: red;
+    }
+
+    * {
+      color: var(--color);
+    }
+
+    .demo {
+      margin: 1em 0;
+      text-align: center;
+    }
+
+    .box {
+      width: 200px;
+      height: 100px;
+      margin: 0 auto;
+      background: var(--背景色, aqua);
+    }
+
+    .demo p {
+      --fs: red;
+      font-size: (--fs, 22px);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 
+    # css变量
+    * var()语法、用法和特性
+      1.  css中原生变量定义语法  --*: 值
+          使用是 var(--*)
+          css变量名(*)不能包含$，[，^，(，%等字符，普通字符局限在只要是“数字[0-9]”“字母[a-zA-Z]”“下划线_”和“短横线-”这些组合，但是可以是中文，日文或者韩文
+          无论变量的声明和使用都必须在声明块{}内
+      2.  变量也是跟着CSS选择器走的，如果变量所在的选择器和使用变量的元素没有交集，是没有效果的。例如#alert定义的变      量，只有id为alert的元素才能享有。如果你想变量全局使用，则你可以设置在:root选择器上；
+          当存在多个同样名称的变量时候，变量的覆盖规则由CSS选择器的权重决定的，但并无!important这种用法，因为没有必要，!important设计初衷是干掉JS的style设置，但对于变量的定义则没有这样的需求。
+      3.  CSS变量使用的完整语法为：var( [, ]? )，用中文表示就是：var( <自定义属性名> [, <默认值 ]? )
+          意思就是，如果我们使用的变量没有定义（注意，仅限于没有定义），则使用后面的值作为元素的属性值。
+      4.  css变量不合法的缺省特性
+          对于CSS变量，只要语法是正确的，就算变量里面的值是个乱七八糟的东西，也是会作为正常的声明解析，如果发现变量值是不合法的，则使用该属性的默认值。
+      5.  css变量的空格尾随特性
+      6.  CSS变量的相互传递特性
+      7.  getPropertyValue(css变量名)   setProperty(css变量名, 值)
+   -->
+  <h3>变量权重（我的紫色继承于根元素）</h3>
+  <div class="demo">
+    <p>我的绿色继承于父元素</p>
+    <div>我的绿色来自直接设置</div>
+    <div id='alert'>
+      ID选择器权重更高，因此阿拉是红色！
+      <p>我也是红色，占了继承的光</p>
+    </div>
+  </div>
+  <h3>var( &lt;自定义属性名> [, &lt;默认值 ]? )变量没有定义使用后面的值作为元素的属性值</h3>
+  <div class="demo">
+    <div class="box"></div>
+  </div>
+  <h3>css变量不合法的缺省特性</h3>
+  <div class="demo">
+    <p>css变量不合法的缺省特性,字体大小不是22px是默认的16px</p>
+  </div>
+</body>
+<script>
+  window.onload = function () {
+    var bgc = document.querySelector("#alert").style.getPropertyValue("--color");
+    console.log(document.querySelector("#alert").style.getPropertyValue("--color"));
+  }
+
+  setTimeout(() => {
+    document.body.style.setProperty("--深蓝", "#9C27B0");
+    console.log(document.body.style.getPropertyValue('--深蓝'))
+  }, 2000);
+</script>
+
+</html>

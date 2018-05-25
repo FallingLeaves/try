@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>css变量-背景色改变</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      text-align: center;
+    }
+
+    body::after {
+      content: "";
+      display: inline-block;
+      height: 100%;
+      vertical-align: middle;
+    }
+
+    .button {
+      position: relative;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background: #f72359;
+      padding: 1em 2em;
+      border: none;
+      color: white;
+      font-size: 1.2em;
+      cursor: pointer;
+      outline: none;
+      overflow: hidden;
+      border-radius: 100px;
+    }
+
+    .button span {
+      position: relative;
+    }
+
+    .button::before {
+      --size: 0;
+      content: '';
+      position: absolute;
+      left: var(--x);
+      top: var(--y);
+      width: var(--size);
+      height: var(--size);
+      background: radial-gradient(circle closest-side, #4405f7, transparent);
+      transform: translate(-50%, -50%);
+      transition: width .2s ease, height .2s ease;
+    }
+
+    .button:hover::before {
+      --size: 400px;
+    }
+  </style>
+</head>
+
+<body>
+  <button class="button">
+    <span>Hover me I'm awesome</span>
+  </button>
+</body>
+<script>
+  document.querySelector('.button').onmousemove = (e) => {
+    const x = e.pageX - e.target.offsetLeft
+    const y = e.pageY - e.target.offsetTop
+    e.target.style.setProperty('--x', `${ x }px`)
+    e.target.style.setProperty('--y', `${ y }px`)
+  }
+</script>
+
+</html>
