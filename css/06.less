@@ -1,0 +1,176 @@
+body,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+}
+
+ul,
+ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+@notCurrentMonthColor: #cacaca;
+@currentDayColor: #fff;
+@currentDayBGColor: #46d7a2;
+@gray: #ccc;
+@hoverBG: #f4f4f4;
+.ui-datapicker-wrapper {
+  position: absolute;
+  min-width: 240px;
+  font-size: 16px;
+  box-shadow: 2px 2px 8px 2px #ccc;
+  text-align: center;
+  display: none;
+  .ui-datapicker-header {
+    // background: #dcd4d4;
+    // font-weight: bold;
+    font-size: 18px;
+    height: 40px;
+    line-height: 40px;
+    .ui-datapicker-curr {
+      margin: 0 40px;
+      span {
+        cursor: pointer;
+        &:hover {
+          color: @currentDayBGColor;
+        }
+      }
+      span+span {
+        margin-left: 10px;
+      }
+    }
+    .ui-datapicker-curr-year {
+      span+span {
+        margin-left: 0;
+      }
+    }
+    .ui-datapicker-btn {
+      width: 40px;
+      font-family: serif; // color: aquamarine;
+      color: @gray;
+      text-decoration: none;
+      &.ui-datapicker-prev {
+        float: left;
+      }
+      &.ui-datapicker-next {
+        float: right;
+      }
+    }
+  }
+  .ui-datapicker-body {
+    .ui-datapicker-body-day {
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        th {
+          height: 30px;
+          line-height: 30px;
+          font-size: 14px;
+          padding: 0;
+        }
+        td {
+          font-size: 12px;
+          cursor: pointer;
+          span {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            padding: 3px;
+            border-radius: 50%;
+            &:hover {
+              background: @hoverBG;
+            }
+          }
+          // &:hover {
+          //   span {
+          //     background: @hoverBG;
+          //   }
+          // }
+        }
+        td.light {
+          color: @notCurrentMonthColor;
+        }
+        td.active {
+          span {
+            background: @currentDayBGColor;
+            color: @currentDayColor;
+          }
+        }
+      }
+    }
+    .ui-datapicker-body-year,.ui-datapicker-body-month {
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        td {
+          span {
+            cursor: pointer;
+            display: inline-block;
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 50px;
+            &:hover {
+              background: @hoverBG;
+            }
+          }
+        }
+        td.active {
+          span {
+            background: @currentDayBGColor;
+            color: @currentDayColor;
+          }
+        }
+      }
+    }
+  }
+  .ui-datapicker-footer {
+    font-size: 12px;
+    color: @gray;
+    overflow: hidden;
+    padding: 0 10px;
+    .ui-datapicker-footer-left {
+      float: left;
+      width: 33%;
+      >div {
+        padding: 10px 0;
+        cursor: pointer;
+        &:hover {
+          color: @currentDayBGColor;
+        }
+      }
+    }
+    .ui-datapicker-footer-right {
+      float: right;
+      white-space: nowrap;
+      width: 67%;
+      text-align: right;
+      >div {
+        display: inline-block;
+        padding: 10px 0;
+        cursor: pointer;
+        &:hover {
+          color: @currentDayBGColor;
+        }
+      }
+      div+div {
+        margin-left: 8px;
+      }
+    }
+  }
+}
+
+.ui-datapicker-show {
+  display: block;
+}
+
+.ui-datapicker-hide {
+  display: none;
+}

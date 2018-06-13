@@ -1,0 +1,150 @@
+body,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+}
+ul,
+ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.ui-datapicker-wrapper {
+  position: absolute;
+  min-width: 240px;
+  font-size: 16px;
+  box-shadow: 2px 2px 8px 2px #ccc;
+  text-align: center;
+  display: none;
+}
+.ui-datapicker-wrapper .ui-datapicker-header {
+  font-size: 18px;
+  height: 40px;
+  line-height: 40px;
+}
+.ui-datapicker-wrapper .ui-datapicker-header .ui-datapicker-curr {
+  margin: 0 40px;
+}
+.ui-datapicker-wrapper .ui-datapicker-header .ui-datapicker-curr span {
+  cursor: pointer;
+}
+.ui-datapicker-wrapper .ui-datapicker-header .ui-datapicker-curr span:hover {
+  color: #46d7a2;
+}
+.ui-datapicker-wrapper .ui-datapicker-header .ui-datapicker-curr span + span {
+  margin-left: 10px;
+}
+.ui-datapicker-wrapper .ui-datapicker-header .ui-datapicker-curr-year span + span {
+  margin-left: 0;
+}
+.ui-datapicker-wrapper .ui-datapicker-header .ui-datapicker-btn {
+  width: 40px;
+  font-family: serif;
+  color: #ccc;
+  text-decoration: none;
+}
+.ui-datapicker-wrapper .ui-datapicker-header .ui-datapicker-btn.ui-datapicker-prev {
+  float: left;
+}
+.ui-datapicker-wrapper .ui-datapicker-header .ui-datapicker-btn.ui-datapicker-next {
+  float: right;
+}
+.ui-datapicker-wrapper .ui-datapicker-body .ui-datapicker-body-day table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.ui-datapicker-wrapper .ui-datapicker-body .ui-datapicker-body-day table th {
+  height: 30px;
+  line-height: 30px;
+  font-size: 14px;
+  padding: 0;
+}
+.ui-datapicker-wrapper .ui-datapicker-body .ui-datapicker-body-day table td {
+  font-size: 12px;
+  cursor: pointer;
+}
+.ui-datapicker-wrapper .ui-datapicker-body .ui-datapicker-body-day table td span {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  padding: 3px;
+  border-radius: 50%;
+}
+.ui-datapicker-wrapper .ui-datapicker-body .ui-datapicker-body-day table td span:hover {
+  background: #f4f4f4;
+}
+.ui-datapicker-wrapper .ui-datapicker-body .ui-datapicker-body-day table td.light {
+  color: #cacaca;
+}
+.ui-datapicker-wrapper .ui-datapicker-body .ui-datapicker-body-day table td.active span {
+  background: #46d7a2;
+  color: #fff;
+}
+.ui-datapicker-wrapper .ui-datapicker-body .ui-datapicker-body-year table,
+.ui-datapicker-wrapper .ui-datapicker-body .ui-datapicker-body-month table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.ui-datapicker-wrapper .ui-datapicker-body .ui-datapicker-body-year table td span,
+.ui-datapicker-wrapper .ui-datapicker-body .ui-datapicker-body-month table td span {
+  cursor: pointer;
+  display: inline-block;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 50px;
+}
+.ui-datapicker-wrapper .ui-datapicker-body .ui-datapicker-body-year table td span:hover,
+.ui-datapicker-wrapper .ui-datapicker-body .ui-datapicker-body-month table td span:hover {
+  background: #f4f4f4;
+}
+.ui-datapicker-wrapper .ui-datapicker-body .ui-datapicker-body-year table td.active span,
+.ui-datapicker-wrapper .ui-datapicker-body .ui-datapicker-body-month table td.active span {
+  background: #46d7a2;
+  color: #fff;
+}
+.ui-datapicker-wrapper .ui-datapicker-footer {
+  font-size: 12px;
+  color: #ccc;
+  overflow: hidden;
+  padding: 0 10px;
+}
+.ui-datapicker-wrapper .ui-datapicker-footer .ui-datapicker-footer-left {
+  float: left;
+  width: 33%;
+}
+.ui-datapicker-wrapper .ui-datapicker-footer .ui-datapicker-footer-left > div {
+  padding: 10px 0;
+  cursor: pointer;
+}
+.ui-datapicker-wrapper .ui-datapicker-footer .ui-datapicker-footer-left > div:hover {
+  color: #46d7a2;
+}
+.ui-datapicker-wrapper .ui-datapicker-footer .ui-datapicker-footer-right {
+  float: right;
+  white-space: nowrap;
+  width: 67%;
+  text-align: right;
+}
+.ui-datapicker-wrapper .ui-datapicker-footer .ui-datapicker-footer-right > div {
+  display: inline-block;
+  padding: 10px 0;
+  cursor: pointer;
+}
+.ui-datapicker-wrapper .ui-datapicker-footer .ui-datapicker-footer-right > div:hover {
+  color: #46d7a2;
+}
+.ui-datapicker-wrapper .ui-datapicker-footer .ui-datapicker-footer-right div + div {
+  margin-left: 8px;
+}
+.ui-datapicker-show {
+  display: block;
+}
+.ui-datapicker-hide {
+  display: none;
+}
