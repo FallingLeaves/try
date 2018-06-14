@@ -86,7 +86,8 @@
     year: new Date().getFullYear(),
     month: new Date().getMonth() + 1,
     day: new Date().getDate(),
-    isRendered: false
+    isRendered: false,
+    isSelectTime: false
   };
 
   function DataPicker(ele, opt) {
@@ -170,11 +171,11 @@
    * 获取可选年的数组
    * @param {*} year 为索引为9的年份
    */
-  DataPicker.prototype.getYearData = function(year) {
+  DataPicker.prototype.getYearData = function (year) {
     year = year || this.options.year || (this.yearData && this.yearData[9].year) || new Date().getFullYear();
     var ret = [];
-    for(var i=0; i<18; i++) {
-      var showYear = year-9 + i;
+    for (var i = 0; i < 18; i++) {
+      var showYear = year - 9 + i;
       ret.push({
         year: showYear,
         class: showYear == year ? "active" : ""
@@ -187,7 +188,7 @@
    * 获取月份数组
    * @param {*} month 
    */
-  DataPicker.prototype.getYearOfMonth = function(month) {
+  DataPicker.prototype.getYearOfMonth = function (month) {
     var ret = [
       "一月",
       "二月",
@@ -202,7 +203,7 @@
       "十一月",
       "十二月"
     ];
-    ret = ret.map(function(item, index) {
+    ret = ret.map(function (item, index) {
       var obj = {};
       obj.month = item;
       obj.class = index == month - 1 ? "active" : "";
@@ -211,6 +212,40 @@
     this.month = ret;
     return ret;
   }
+
+  DataPicker.prototype.getHour = function () {
+    var hours = [];
+    var hour = null;
+    for (var i = 0; i < 24; i++) {
+      hour = i >= 10 ? i.toString() : "0" + i;
+      hours.push(hour);
+    }
+    this.hours = hours;
+    return hours;
+  }
+
+  DataPicker.prototype.getMinute = function () {
+    var minutes = [];
+    var minute = null;
+    for (var i = 0; i < 60; i++) {
+      minute = i >= 10 ? i.toString() : "0" + i;
+      minutes.push(minute);
+    }
+    this.minutes = minutes;
+    return minutes;
+  }
+
+  DataPicker.prototype.getSecond = function () {
+    var seconds = [];
+    var second = null;
+    for (var i = 0; i < 60; i++) {
+      second = i >= 10 ? i.toString() : "0" + i;
+      seconds.push(second);
+    }
+    this.seconds = seconds;
+    return seconds;
+  }
+
   /**
    * 渲染可选天数
    * @param {*} renderData 
@@ -221,9 +256,9 @@
     var showmonth = null;
     var showday = null;
     var cls = null;
-    var height = this.bodyStyle && parseInt((this.bodyStyle.height - 30)/6, 10) + "px" || "auto";
+    var height = this.bodyStyle && parseInt((this.bodyStyle.height - 30) / 6, 10) + "px" || "auto";
     for (var i = 0; i < 6; i++) {
-      str += '<tr style="height:'+ height +'">';
+      str += '<tr style="height:' + height + '">';
       for (var j = 0; j < 7; j++) {
         showday = renderData.days[i * 7 + j].showDate;
         showmonth = renderData.days[i * 7 + j].showMonth;
@@ -240,13 +275,13 @@
    * 渲染可选年份数组
    * @param {*} renderData 
    */
-  DataPicker.prototype.renderYear = function(renderData) {
+  DataPicker.prototype.renderYear = function (renderData) {
     var str = "";
     var item = null;
-    var height = this.bodyStyle && parseInt((this.bodyStyle.height)/6, 10) + "px" || "auto";
-    for(var i=0; i<6; i++) {
-      str += '<tr style="height:'+ height +'">';
-      for(var j=0; j<3; j++) {
+    var height = this.bodyStyle && parseInt((this.bodyStyle.height) / 6, 10) + "px" || "auto";
+    for (var i = 0; i < 6; i++) {
+      str += '<tr style="height:' + height + '">';
+      for (var j = 0; j < 3; j++) {
         item = renderData[i * 3 + j];
         str += `<td class="${item.class}"><span>${item.year}</span></td>`;
       }
@@ -258,13 +293,13 @@
    * 渲染可选月份数组
    * @param {*} renderData 
    */
-  DataPicker.prototype.renderMonth = function(renderData) {
+  DataPicker.prototype.renderMonth = function (renderData) {
     var str = "";
     var item = null;
-    var height = this.bodyStyle && parseInt((this.bodyStyle.height)/4, 10) + "px" || "auto";
-    for(var i=0; i<4; i++) {
-      str += '<tr style="height:'+ height +'">';
-      for(var j=0; j<3; j++) {
+    var height = this.bodyStyle && parseInt((this.bodyStyle.height) / 4, 10) + "px" || "auto";
+    for (var i = 0; i < 4; i++) {
+      str += '<tr style="height:' + height + '">';
+      for (var j = 0; j < 3; j++) {
         item = renderData[i * 3 + j];
         str += `<td class="${item.class}" data-month="${i * 3 + j + 1}"><span>${item.month}</span></td>`;
       }
@@ -272,6 +307,17 @@
     }
     return str.trim();
   }
+
+  DataPicker.prototype.renderTime = function (renderData) {
+    var str = "";
+    var item = null;
+    for (var i = 0; i < renderData.length; i++) {
+      item = renderData[i];
+      str += `<li data-time="${item}">${item}</li>`
+    }
+    return str.trim();
+  }
+
   /**
    * 渲染主体框架
    * @param {*} year 
@@ -298,6 +344,9 @@
                               <a href="javascript:" class="ui-datapicker-btn ui-datapicker-prev ui-datapicker-prev-year">&lt;</a>
                               <a href="javascript:" class="ui-datapicker-btn ui-datapicker-next ui-datapicker-next-year">&gt;</a>
                               <div class="ui-datapicker-curr ui-datapicker-curr-year"><span>${renderData.year-9}年</span>-<span>${renderData.year+8}年</span></div>
+                            </div>
+                            <div class="ui-datapicker-check-time ui-datapicker-hide">
+                            <div class="ui-datapicker-curr ui-datapicker-curr-time"><span>选择时间</span></div>
                             </div>
                           </div>
                           <div class="ui-datapicker-body">
@@ -329,6 +378,18 @@
                                 </tbody>
                               </table>
                             </div>
+                            <div class="ui-datapicker-body-time ui-datapicker-hide">
+                              <ul class="time-nav">
+                                <li>时</li>
+                                <li>分</li>
+                                <li>秒</li>
+                              </ul>
+                              <div class="select-time">
+                                <ul class="hour"></ul>
+                                <ul class="minute"></ul>
+                                <ul class="second"></ul>
+                              </div>
+                            </div>
                           </div>
                           <div class="ui-datapicker-footer">
                             <div class="ui-datapicker-footer-left">
@@ -345,14 +406,20 @@
     this.DOM["datapickerCheckDayBody"] = this.wrapper.querySelector(".ui-datapicker-body-day tbody");
     this.DOM["datapickerCheckYearBody"] = this.wrapper.querySelector(".ui-datapicker-body-year tbody");
     this.DOM["datapickerCheckMonthBody"] = this.wrapper.querySelector(".ui-datapicker-body-month tbody");
+    this.DOM["datapickerCheckTimeBody"] = this.wrapper.querySelector(".ui-datapicker-body-time");
+    this.DOM["selectHour"] = this.wrapper.querySelector(".hour");
+    this.DOM["selectMinute"] = this.wrapper.querySelector(".minute");
+    this.DOM["selectSecond"] = this.wrapper.querySelector(".second");
     this.DOM["prevMonthBtn"] = this.wrapper.querySelector(".ui-datapicker-prev-month");
     this.DOM["nextMonthBtn"] = this.wrapper.querySelector(".ui-datapicker-next-month");
     this.DOM["showYearMonth"] = this.wrapper.querySelector(".ui-datapicker-curr-yearmonth");
     this.DOM["checkYearOrMonthDOM"] = this.wrapper.querySelector(".ui-datapicker-curr-yearmonth");
     this.DOM["showYearDOM"] = this.wrapper.querySelector(".ui-datapicker-curr-year");
+    this.DOM["showTimeDom"] = this.wrapper.querySelector(".ui-datapicker-check-time");
     this.DOM["prevYearBtn"] = this.wrapper.querySelector(".ui-datapicker-prev-year");
     this.DOM["nextYearBtn"] = this.wrapper.querySelector(".ui-datapicker-next-year");
     this.DOM["showMonthDOM"] = this.wrapper.querySelector(".ui-datapicker-curr-month");
+    this.DOM["selectTime"] = this.wrapper.querySelector(".ui-datapicker-select-time");
     this.bodyStyle = getRect(this.wrapper.querySelector(".ui-datapicker-body"));
   }
 
@@ -362,7 +429,7 @@
     this.DOM["showYearMonth"].innerHTML = `<span class="ui-datapicker-select-year">${renderData.year}年</span><span class="ui-datapicker-select-month">${renderData.month}月</span>`;
   }
 
-  DataPicker.prototype.changeYearUI = function(year) {
+  DataPicker.prototype.changeYearUI = function (year) {
     var renderData = this.getYearData(year);
     this.DOM["datapickerCheckYearBody"].innerHTML = this.renderYear(renderData);
     this.DOM["showYearDOM"].innerHTML = `<span>${renderData[0].year}年</span>-<span>${renderData[renderData.length-1].year}年</span>`;
@@ -387,15 +454,15 @@
       this.wrapperStyle.top = `${chooseDOMRect.top -this.wrapper.clientHeight- 5}px`;
     }
   }
-  
-  DataPicker.prototype.prevYear = function(e) {
+
+  DataPicker.prototype.prevYear = function (e) {
     e.stopPropagation();
-    this.changeYearUI(this.yearData[9].year-18);
+    this.changeYearUI(this.yearData[9].year - 18);
   }
 
-  DataPicker.prototype.nextYear = function(e) {
+  DataPicker.prototype.nextYear = function (e) {
     e.stopPropagation();
-    this.changeYearUI(this.yearData[9].year+18);
+    this.changeYearUI(this.yearData[9].year + 18);
   }
 
   DataPicker.prototype.prevMonth = function (e) {
@@ -422,7 +489,7 @@
    * 选择年份
    * @param {*} e 
    */
-  DataPicker.prototype.selectYear = function(e) {
+  DataPicker.prototype.selectYear = function (e) {
     e = e || window.event;
     var target = e.target || e.srcElement;
     if (target.tagName === "SPAN") {
@@ -448,8 +515,8 @@
    * 选择月份
    * @param {*} e 
    */
-  DataPicker.prototype.selectMonth = function(e) {
-    
+  DataPicker.prototype.selectMonth = function (e) {
+
     e = e || window.event;
     var target = e.target || e.srcElement;
     if (target.tagName === "SPAN") {
@@ -477,7 +544,7 @@
    * @param {*} e 
    */
   DataPicker.prototype.selectDay = function (e) {
-    
+
     e = e || window.event;
     var target = e.target || e.srcElement;
     if (target.tagName === "SPAN") {
@@ -499,27 +566,59 @@
       }
       this.hide(e);
     }
-    
+
     // this.removeEvent();
   }
 
-  DataPicker.prototype.showCheckYear = function(e) {
-    e = e || window.event;
-    var target = e.target || e.srcElement;
-    if(target.className.indexOf("ui-datapicker-select-year")==-1 && target.className.indexOf("ui-datapicker-select-month")==-1) {
-      return;
+  DataPicker.prototype.selectTime = function (e) {
+
+  }
+
+  DataPicker.prototype.showTime = function (e) {
+    this.options.isSelectTime = !this.options.isSelectTime;
+    this.wrapper.querySelector(".select-time").style.height = this.bodyStyle && parseInt((this.bodyStyle.height) -30, 10) + "px" || "auto"
+    if (this.options.isSelectTime) {
+      this.DOM["selectTime"].innerHTML = "返回日期";
+      this.allHide();
+      removeClass(this.DOM["showTimeDom"], "ui-datapicker-hide");
+      var hours = this.getHour();
+      var minutes = this.getMinute();
+      var seconds = this.getSecond();
+      this.DOM["selectHour"].innerHTML = this.renderTime(hours);
+      this.DOM["selectMinute"].innerHTML = this.renderTime(minutes);
+      this.DOM["selectSecond"].innerHTML = this.renderTime(seconds);
+
+      removeClass(this.DOM["datapickerCheckTimeBody"], "ui-datapicker-hide");
+    } else {
+      this.DOM["selectTime"].innerHTML = "选择时间";
+      this.allHide();
+      removeClass(this.DOM["checkYearOrMonthDOM"].parentNode, "ui-datapicker-hide");
+      removeClass(this.DOM["datapickerCheckDayBody"].parentNode.parentNode, "ui-datapicker-hide");
     }
+
+  }
+
+  DataPicker.prototype.allHide = function () {
     var headerchildren = this.wrapper.querySelector(".ui-datapicker-header").children;
     var tbodychildren = this.wrapper.querySelector(".ui-datapicker-body").children;
-    for(var i=0; i<headerchildren.length; i++) {
+    for (var i = 0; i < headerchildren.length; i++) {
       var item = headerchildren[i];
       addClass(item, "ui-datapicker-hide");
     }
-    for(var i=0; i<tbodychildren.length; i++) {
+    for (var i = 0; i < tbodychildren.length; i++) {
       var item = tbodychildren[i];
       addClass(item, "ui-datapicker-hide");
     }
-    if(target.className.indexOf("ui-datapicker-select-year")!=-1) {
+  }
+
+  DataPicker.prototype.showCheckYear = function (e) {
+    e = e || window.event;
+    var target = e.target || e.srcElement;
+    if (target.className.indexOf("ui-datapicker-select-year") == -1 && target.className.indexOf("ui-datapicker-select-month") == -1) {
+      return;
+    }
+    this.allHide();
+    if (target.className.indexOf("ui-datapicker-select-year") != -1) {
       console.log("选择年");
       removeClass(this.DOM["showYearDOM"].parentNode, "ui-datapicker-hide");
       removeClass(this.DOM["datapickerCheckYearBody"].parentNode.parentNode, "ui-datapicker-hide");
@@ -527,7 +626,7 @@
       this.DOM["showYearDOM"].innerHTML = `<span>${yearData[0].year}年</span>-<span>${yearData[yearData.length-1].year}年</span>`;
       this.DOM["datapickerCheckYearBody"].innerHTML = this.renderYear(yearData);
     }
-    if(target.className.indexOf("ui-datapicker-select-month")!=-1) {
+    if (target.className.indexOf("ui-datapicker-select-month") != -1) {
       console.log("选择月");
       removeClass(this.DOM["showMonthDOM"].parentNode, "ui-datapicker-hide");
       removeClass(this.DOM["datapickerCheckMonthBody"].parentNode.parentNode, "ui-datapicker-hide");
@@ -535,7 +634,7 @@
       this.DOM["showMonthDOM"].innerHTML = `<span>${this.options.year}年</span>`;
       this.DOM["datapickerCheckMonthBody"].innerHTML = this.renderMonth(month);
     }
-    
+
   }
 
   DataPicker.prototype.on = function (ele, type, fn, capture = false) {
@@ -571,6 +670,7 @@
     this.on(this.DOM["nextYearBtn"], "click", this.nextYear.bind(self));
     this.on(this.DOM["datapickerCheckYearBody"], "click", this.selectYear.bind(self));
     this.on(this.DOM["datapickerCheckMonthBody"], "click", this.selectMonth.bind(self));
+    this.on(this.DOM["selectTime"], "click", this.showTime.bind(self));
   }
 
   DataPicker.prototype.removeEvent = function () {
@@ -580,7 +680,7 @@
     }
   }
 
-  DataPicker.prototype.ignore = function(e) {
+  DataPicker.prototype.ignore = function (e) {
     e.stopPropagation();
   }
 
@@ -607,7 +707,7 @@
     this.renderUI();
     this.addEvent();
     this.options.isRendered = true;
-    
+
   }
 
   window.DataPicker = DataPicker;
