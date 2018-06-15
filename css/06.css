@@ -131,9 +131,11 @@ ol {
   font-size: 14px;
   display: inline-block;
   overflow-y: auto;
-  height: 99%;
+  height: 100%;
   width: 28%;
+  box-sizing: border-box;
   border: solid 1px #eee;
+  scroll-behavior: smooth;
 }
 .ui-datapicker-wrapper .ui-datapicker-body .ui-datapicker-body-time .select-time ul::-webkit-scrollbar-thumb {
   border-radius: 5px;
@@ -158,6 +160,10 @@ ol {
 }
 .ui-datapicker-wrapper .ui-datapicker-body .ui-datapicker-body-time .select-time ul li:hover {
   background: #f4f4f4;
+}
+.ui-datapicker-wrapper .ui-datapicker-body .ui-datapicker-body-time .select-time ul li.active {
+  background: #46d7a2;
+  color: #fff;
 }
 .ui-datapicker-wrapper .ui-datapicker-footer {
   font-size: 12px;

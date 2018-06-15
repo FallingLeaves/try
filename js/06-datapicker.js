@@ -80,12 +80,21 @@
     }
   }
 
+  //补0
+  function zfill(num, size) {
+    var s = '000000000' + num
+    return s.substr(s.length - size)
+  }
+
   var DEFAULT_OPTIONS = {
     isOpen: false,
     // events: {},
     year: new Date().getFullYear(),
     month: new Date().getMonth() + 1,
     day: new Date().getDate(),
+    hour: new Date().getHours(),
+    minute: new Date().getMinutes(),
+    second: new Date().getSeconds(),
     isRendered: false,
     isSelectTime: false
   };
@@ -218,7 +227,10 @@
     var hour = null;
     for (var i = 0; i < 24; i++) {
       hour = i >= 10 ? i.toString() : "0" + i;
-      hours.push(hour);
+      hours.push({
+        class: i == this.options.hour ? "active" : "",
+        value: hour
+      });
     }
     this.hours = hours;
     return hours;
@@ -229,7 +241,10 @@
     var minute = null;
     for (var i = 0; i < 60; i++) {
       minute = i >= 10 ? i.toString() : "0" + i;
-      minutes.push(minute);
+      minutes.push({
+        class: i == this.options.minute ? "active":"",
+        value: minute
+      });
     }
     this.minutes = minutes;
     return minutes;
@@ -240,7 +255,10 @@
     var second = null;
     for (var i = 0; i < 60; i++) {
       second = i >= 10 ? i.toString() : "0" + i;
-      seconds.push(second);
+      seconds.push({
+        class: i == this.options.second ? "active":"",
+        value: second
+      });
     }
     this.seconds = seconds;
     return seconds;
@@ -313,7 +331,7 @@
     var item = null;
     for (var i = 0; i < renderData.length; i++) {
       item = renderData[i];
-      str += `<li data-time="${item}">${item}</li>`
+      str += `<li class="${item.class}" data-time="${item.value}">${item.value}</li>`;
     }
     return str.trim();
   }
@@ -421,6 +439,9 @@
     this.DOM["showMonthDOM"] = this.wrapper.querySelector(".ui-datapicker-curr-month");
     this.DOM["selectTime"] = this.wrapper.querySelector(".ui-datapicker-select-time");
     this.bodyStyle = getRect(this.wrapper.querySelector(".ui-datapicker-body"));
+    this.DOM["clear"] = this.wrapper.querySelector(".ui-datapicker-select-clear");
+    this.DOM["now"] = this.wrapper.querySelector(".ui-datapicker-select-now");
+    this.DOM["sure"] = this.wrapper.querySelector(".ui-datapicker-select-sure");
   }
 
   DataPicker.prototype.changeDayUI = function (year, month) {
@@ -559,24 +580,84 @@
       this.options.year = new Date(date).getFullYear();
       this.options.month = new Date(date).getMonth() + 1;
       target.parentNode.classList.add("active");
-      if (this.chooseDOM.nodeName === "INPUT") {
-        this.chooseDOM.value = date;
-      } else {
-        this.chooseDOM.innerHTML = date;
-      }
-      this.hide(e);
+      // if (this.chooseDOM.nodeName === "INPUT") {
+      //   this.chooseDOM.value = `${date} ${this.options.hour}:${this.options.minute}:${this.options.second}`;
+      // } else {
+      //   this.chooseDOM.innerHTML = `${date} ${this.options.hour}:${this.options.minute}:${this.options.second}`;
+      // }
+      // this.hide(e);
     }
 
     // this.removeEvent();
   }
 
-  DataPicker.prototype.selectTime = function (e) {
+  DataPicker.prototype.selectHour = function (e) {
+    e.stopPropagation();
+    e = e || window.event;
+    var target = e.target || e.srcElement;
+    if(target.tagName === "LI") {
+      // console.log(target);
+      var lis = this.DOM["selectHour"].querySelectorAll("li");
+      lis.forEach(function(li) {
+        li.classList.remove("active");
+      });
+      addClass(target, "active");
+      this.options.hour = parseInt(target.getAttribute("data-time"), 10);
+      this.scrollToTime(this.DOM["selectHour"]);
+    }
+  }
 
+  DataPicker.prototype.selectMinute = function (e) {
+    e.stopPropagation();
+    e = e || window.event;
+    var target = e.target || e.srcElement;
+    if(target.tagName === "LI") {
+      // console.log(target);
+      var lis = this.DOM["selectMinute"].querySelectorAll("li");
+      lis.forEach(function(li) {
+        li.classList.remove("active");
+      });
+      addClass(target, "active");
+      this.options.minute = parseInt(target.getAttribute("data-time"), 10);
+      this.scrollToTime(this.DOM["selectMinute"]);
+    }
+  }
+
+  DataPicker.prototype.selectSecond = function (e) {
+    e.stopPropagation();
+    e = e || window.event;
+    var target = e.target || e.srcElement;
+    if(target.tagName === "LI") {
+      // console.log(target);
+      var lis = this.DOM["selectSecond"].querySelectorAll("li");
+      lis.forEach(function(li) {
+        li.classList.remove("active");
+      });
+      addClass(target, "active");
+      this.options.second = parseInt(target.getAttribute("data-time"), 10);
+      this.scrollToTime(this.DOM["selectSecond"]);
+    }
+  }
+
+  DataPicker.prototype.scrollToTime = function(ulDom) {
+    var ulHeight = ulDom.clientHeight;
+    var liHeight = ulDom.querySelector("li").clientHeight;
+    var activeLi = ulDom.querySelector(".active");
+    var children = ulDom.children;
+    var index = 0;
+    for(var i=0; i<children.length; i++) {
+      if(activeLi === children[i]) {
+        index = i;
+        break;
+      }
+    }
+    var scrollTop = index * liHeight - (ulHeight/2-liHeight/2);
+    ulDom.scrollTop = scrollTop;
   }
 
   DataPicker.prototype.showTime = function (e) {
     this.options.isSelectTime = !this.options.isSelectTime;
-    this.wrapper.querySelector(".select-time").style.height = this.bodyStyle && parseInt((this.bodyStyle.height) -30, 10) + "px" || "auto"
+    this.wrapper.querySelector(".select-time").style.height = this.bodyStyle && parseInt((this.bodyStyle.height) -30, 10) + "px" || "auto";
     if (this.options.isSelectTime) {
       this.DOM["selectTime"].innerHTML = "返回日期";
       this.allHide();
@@ -589,6 +670,9 @@
       this.DOM["selectSecond"].innerHTML = this.renderTime(seconds);
 
       removeClass(this.DOM["datapickerCheckTimeBody"], "ui-datapicker-hide");
+      this.scrollToTime(this.DOM["selectHour"]);
+      this.scrollToTime(this.DOM["selectMinute"]);
+      this.scrollToTime(this.DOM["selectSecond"]);
     } else {
       this.DOM["selectTime"].innerHTML = "选择时间";
       this.allHide();
@@ -637,6 +721,52 @@
 
   }
 
+  DataPicker.prototype.sure = function(e) {
+    e.stopPropagation();
+    if (this.chooseDOM.nodeName === "INPUT") {
+      this.chooseDOM.value = `${this.options.year}-${zfill(this.options.month, 2)}-${zfill(this.options.day, 2)} ${zfill(this.options.hour, 2)}:${zfill(this.options.minute, 2)}:${zfill(this.options.second, 2)}`;
+    } else {
+      this.chooseDOM.innerHTML = `${this.options.year}-${zfill(this.options.month, 2)}-${zfill(this.options.day, 2)} ${zfill(this.options.hour, 2)}:${zfill(this.options.minute, 2)}:${zfill(this.options.second, 2)}`;
+    }
+    this.hide(e);
+    // this.showTime(e);
+    if(this.options.isSelectTime) {
+      this.showTime(e);
+    }
+    this.allHide();
+    removeClass(this.DOM["checkYearOrMonthDOM"].parentNode, "ui-datapicker-hide");
+    removeClass(this.DOM["datapickerCheckDayBody"].parentNode.parentNode, "ui-datapicker-hide");
+  }
+
+  DataPicker.prototype.now = function(e) {
+    e.stopPropagation();
+    var now = new Date();
+    this.options.year = now.getFullYear();
+    this.options.month = now.getMonth() + 1;
+    this.options.day = now.getDate();
+    this.options.hour = now.getHours();
+    this.options.minute = now.getMinutes();
+    this.options.second = now.getSeconds();
+    this.sure(e);
+  }
+
+  DataPicker.prototype.clear = function(e) {
+    e.stopPropagation();
+    if (this.chooseDOM.nodeName === "INPUT") {
+      this.chooseDOM.value = "";
+    } else {
+      this.chooseDOM.innerHTML = "";
+    }
+    // this.hide(e);
+    // this.showTime(e);
+    if(this.options.isSelectTime) {
+      this.showTime(e);
+    }
+    this.allHide();
+    removeClass(this.DOM["checkYearOrMonthDOM"].parentNode, "ui-datapicker-hide");
+    removeClass(this.DOM["datapickerCheckDayBody"].parentNode.parentNode, "ui-datapicker-hide");
+  }
+
   DataPicker.prototype.on = function (ele, type, fn, capture = false) {
     this.events.push({
       dom: ele,
@@ -671,6 +801,12 @@
     this.on(this.DOM["datapickerCheckYearBody"], "click", this.selectYear.bind(self));
     this.on(this.DOM["datapickerCheckMonthBody"], "click", this.selectMonth.bind(self));
     this.on(this.DOM["selectTime"], "click", this.showTime.bind(self));
+    this.on(this.DOM["selectHour"], "click", this.selectHour.bind(self));
+    this.on(this.DOM["selectMinute"], "click", this.selectMinute.bind(self));
+    this.on(this.DOM["selectSecond"], "click", this.selectSecond.bind(self));
+    this.on(this.DOM["sure"], "click", this.sure.bind(self));
+    this.on(this.DOM["now"], "click", this.now.bind(self));
+    this.on(this.DOM["clear"], "click", this.clear.bind(self));
   }
 
   DataPicker.prototype.removeEvent = function () {

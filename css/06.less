@@ -154,9 +154,11 @@ ol {
           font-size: 14px;
           display: inline-block;
           overflow-y: auto;
-          height: 99%;
+          height: 100%;
           width: 28%;
+          box-sizing: border-box;
           border: solid 1px #eee;
+          scroll-behavior: smooth;
           &::-webkit-scrollbar-thumb {
             border-radius: 5px;
             -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
@@ -179,6 +181,10 @@ ol {
             cursor: pointer;
             &:hover {
               background: @hoverBG;
+            }
+            &.active {
+              background: @currentDayBGColor;
+              color: @currentDayColor;
             }
           }
         }
